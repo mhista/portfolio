@@ -93,7 +93,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     href: project!.projectUrl!,
                     classes: 'text-white hover:text-gray-400 transition-colors inline-flex items-center gap-2',
                     [
-                      Component.text('${project!.title.toUpperCase()}.HEALTH'),
+                      Component.text(project!.title.toUpperCase()),
                       span([Component.text('↗')]),
                     ],
                   )
@@ -141,7 +141,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
           // Right side - Hero image
           div(classes: 'relative', [
             div(classes: 'aspect-[4/3] bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden', [
-              ShimmerImage(
+              img(
                 src: project!.imageUrl,
                 alt: project!.title,
                 classes: 'w-full h-full object-fit',

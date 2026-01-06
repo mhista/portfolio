@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:jaspr/dom.dart';
 import 'package:jaspr/server.dart' hide Request, Response, Handler;
 import 'package:port/main_layout.dart';
 import 'package:port/pages/contact_page.dart';
@@ -12,11 +11,11 @@ import 'package:relic/io_adapter.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
-// Import your App component
-
 class EmailServer {
   static final String smtpHost = Platform.environment['SMTP_HOST'] ?? 'smtp.gmail.com';
-  static final int smtpPort = Platform.environment['SMTP_PORT'] != null ? int.parse(Platform.environment['SMTP_PORT']!): 587;
+  static final int smtpPort = Platform.environment['SMTP_PORT'] != null 
+      ? int.parse(Platform.environment['SMTP_PORT']!) 
+      : 587;
   static final String smtpUser = Platform.environment['SMTP_USER'] ?? 'your-email@gmail.com';
   static final String smtpPassword = Platform.environment['SMTP_PASSWORD'] ?? 'your-app-password';
   static final String receiverEmail = Platform.environment['RECEIVER_EMAIL'] ?? 'your-email@gmail.com';
@@ -24,20 +23,20 @@ class EmailServer {
   Future<void> start() async {
     final app = RelicApp();
 
-    // Add global middleware
-    app.use('/', _loggingMiddleware());
+    // CRITICAL: CORS middleware must be FIRST, before logging
     app.use('/', _corsMiddleware());
+    app.use('/', _loggingMiddleware());
 
     // Health check endpoint
     app.get('/health', (Request request) {
       return Response.ok(body: Body.fromString('Server is running'));
     });
 
-    // Contact form endpoint
+    // Contact form endpoint - Handle both OPTIONS and POST
+    app.options('/contact/send', _handleCorsPreflight);
     app.post('/contact/send', _handleContactForm);
 
-    // Serve static files from 'web' directory under /app
-    // This serves CSS, JS, images, etc.
+    // Serve static files from 'web' directory
     final webDir = Directory('web');
     if (await webDir.exists()) {
       app.anyOf(
@@ -46,9 +45,8 @@ class EmailServer {
         StaticHandler.directory(
           webDir,
           cacheControl: (req, fileInfo) => CacheControlHeader(
-            maxAge: 3600, // Cache for 1 hour
+            maxAge: 3600,
             publicCache: true,
-            
           ),
         ).asHandler,
       );
@@ -56,13 +54,11 @@ class EmailServer {
       print('⚠️  Warning: web directory not found');
     }
 
-    // Serve Jaspr app (HTML routes) - This should come AFTER static files
+    // HTML Routes
     app.get('/', _serveJasprHome);
     app.get('/info', _serveJasprInfo);
     app.get('/contact', _serveJasprContact);
     app.get('/projects/:id', _serveJasprProjectsDetails);
-    // app.get('/**', _serveJasprHome); 
-    // app.get('/app/', _serveJasprApp);
 
     // Start server
     final server = await app.serve(
@@ -73,122 +69,30 @@ class EmailServer {
 
     print('✅ Server running on http://localhost:${server.port}');
     print('📧 Email endpoint: http://localhost:${server.port}/contact/send');
-    print('🌐 App: http://localhost:${server.port}/app');
-    print('📁 Static files: http://localhost:${server.port}/app/main.css, /app/interaction.js, etc.');
+    print('📁 Static files: http://localhost:${server.port}/');
   }
 
-  // Serve Jaspr app handler
-  Future<Response> _serveJasprHome(Request request,) async {
-    print("Serving Jaspr app: ${request.url.path}");
-
-    // Render the Jaspr component
-    final rendered = await renderComponent(
-      MainLayout(child: HomePage()),
-      request: null,
-    );
-
-    // Convert bytes to string
-    final htmlString = utf8.decode(rendered.body);
-
-    // Build headers
-    final headers = Headers.build((h) {
-      rendered.headers.forEach((key, values) {
-        h[key] = values;
-      });
-    });
-
+  // Handle CORS preflight
+  Response _handleCorsPreflight(Request request) {
     return Response.ok(
-      // rendered.statusCode,
-      body: Body.fromString(htmlString, mimeType: MimeType.html),
-      headers: headers,
-    );
-  }
-
-  // Serve Jaspr app handler
-  Future<Response> _serveJasprInfo(Request request,) async {
-    print("Serving Jaspr app: ${request.url.path}");
-
-    // Render the Jaspr component
-    final rendered = await renderComponent(
-      MainLayout(child: InfoPage()),
-      request: null,
-    );
-
-    // Convert bytes to string
-    final htmlString = utf8.decode(rendered.body);
-
-    // Build headers
-    final headers = Headers.build((h) {
-      rendered.headers.forEach((key, values) {
-        h[key] = values;
-      });
-    });
-
-    return Response.ok(
-      // rendered.statusCode,
-      body: Body.fromString(htmlString, mimeType: MimeType.html),
-      headers: headers,
-    );
-  }
-  // Serve Jaspr app handler
-  Future<Response> _serveJasprContact(Request request,) async {
-    print("Serving Jaspr app: ${request.url.path}");
-
-    // Render the Jaspr component
-    final rendered = await renderComponent(
-      MainLayout(child: ContactPage()),
-      request: null,
-    );
-
-    // Convert bytes to string
-    final htmlString = utf8.decode(rendered.body);
-
-    // Build headers
-    final headers = Headers.build((h) {
-      rendered.headers.forEach((key, values) {
-        h[key] = values;
-      });
-    });
-
-    return Response.ok(
-      // rendered.statusCode,
-      body: Body.fromString(htmlString, mimeType: MimeType.html),
-      headers: headers,
-    );
-  }
-
-  // Serve Jaspr app handler
-  Future<Response> _serveJasprProjectsDetails(Request request,) async {
-    print("Serving Jaspr app: ${request.url.path}");
-
-    // Render the Jaspr component
-    final id = request.rawPathParameters[#id];
-    final rendered = await renderComponent(
-      MainLayout(child: ProjectDetailPage(projectId: id ?? '')),
-      request: null,
-    );
-
-    // Convert bytes to string
-    final htmlString = utf8.decode(rendered.body);
-
-    // Build headers
-    final headers = Headers.build((h) {
-      rendered.headers.forEach((key, values) {
-        h[key] = values;
-      });
-    });
-
-    return Response.ok(
-      // rendered.statusCode,
-      body: Body.fromString(htmlString, mimeType: MimeType.html),
-      headers: headers,
+      body: Body.empty(),
+      headers: Headers.build((h) {
+        h['Access-Control-Allow-Origin'] = ['*'];
+        h['Access-Control-Allow-Methods'] = ['GET, POST, PUT, DELETE, OPTIONS'];
+        h['Access-Control-Allow-Headers'] = ['Content-Type, Authorization, Accept'];
+        h['Access-Control-Max-Age'] = ['86400']; // Cache preflight for 24 hours
+      }),
     );
   }
 
   // Contact form handler
   Future<Response> _handleContactForm(Request request) async {
     try {
+      print('📧 Received contact form request');
+      
       final bodyText = await request.readAsString();
+      print('📧 Body: $bodyText');
+      
       final data = jsonDecode(bodyText) as Map<String, dynamic>;
 
       final name = data['name'] as String?;
@@ -230,8 +134,9 @@ class EmailServer {
           ),
         );
       }
-    } catch (e) {
-      print('Error handling contact form: $e');
+    } catch (e, stackTrace) {
+      print('❌ Error handling contact form: $e');
+      print('Stack trace: $stackTrace');
       return Response(
         500,
         body: Body.fromString(
@@ -240,6 +145,48 @@ class EmailServer {
         ),
       );
     }
+  }
+
+  // Serve Jaspr pages
+  Future<Response> _serveJasprHome(Request request) async {
+    return _renderJasprComponent(HomePage(), 'Portfolio - Home');
+  }
+
+  Future<Response> _serveJasprInfo(Request request) async {
+    return _renderJasprComponent(InfoPage(), 'Portfolio - Info');
+  }
+
+  Future<Response> _serveJasprContact(Request request) async {
+    return _renderJasprComponent(ContactPage(), 'Portfolio - Contact');
+  }
+
+  Future<Response> _serveJasprProjectsDetails(Request request) async {
+    final id = request.rawPathParameters[#id];
+    return _renderJasprComponent(
+      ProjectDetailPage(projectId: id ?? ''),
+      'Portfolio - Project',
+    );
+  }
+
+  // Helper to render Jaspr components
+  Future<Response> _renderJasprComponent(Component component, String title) async {
+    final rendered = await renderComponent(
+      MainLayout(child: component),
+      request: null,
+    );
+
+    final htmlString = utf8.decode(rendered.body);
+
+    final headers = Headers.build((h) {
+      rendered.headers.forEach((key, values) {
+        h[key] = values;
+      });
+    });
+
+    return Response.ok(
+      body: Body.fromString(htmlString, mimeType: MimeType.html),
+      headers: headers,
+    );
   }
 
   // Send email
@@ -406,27 +353,36 @@ class EmailServer {
     ''';
   }
 
-  // CORS Middleware
+  // CORS Middleware - MUST add headers to ALL responses
   Middleware _corsMiddleware() {
     return (Handler next) {
       return (Request request) async {
+        print('🔒 CORS: ${request.method.name} ${request.url.path}');
+        
+        // Handle preflight OPTIONS
         if (request.method == Method.options) {
+          print('✅ CORS: Preflight request');
           return Response.ok(
             body: Body.empty(),
             headers: Headers.build((h) {
               h['Access-Control-Allow-Origin'] = ['*'];
               h['Access-Control-Allow-Methods'] = ['GET, POST, PUT, DELETE, OPTIONS'];
-              h['Access-Control-Allow-Headers'] = ['Content-Type, Authorization'];
+              h['Access-Control-Allow-Headers'] = ['Content-Type, Authorization, Accept'];
+              h['Access-Control-Max-Age'] = ['86400'];
             }),
           );
         }
 
+        // Process request
         final result = await next(request);
 
+        // Add CORS headers to response
         if (result is Response) {
           return result.copyWith(
             headers: result.headers.transform((h) {
               h['Access-Control-Allow-Origin'] = ['*'];
+              h['Access-Control-Allow-Methods'] = ['GET, POST, PUT, DELETE, OPTIONS'];
+              h['Access-Control-Allow-Headers'] = ['Content-Type, Authorization, Accept'];
             }),
           );
         }

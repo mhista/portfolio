@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class EmailService {
   // Use localhost for development, your domain for production
-  static const String baseUrl = 'http://localhost:8080';
+  static final String baseUrl = Platform.environment['BASE_URL'] ?? 'http://localhost:8080';
   // For production: static const String baseUrl = 'https://api.yourdomain.com';
 
   static Future<bool> sendContactEmail({

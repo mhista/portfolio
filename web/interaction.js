@@ -179,24 +179,27 @@ function initProjectCarousel() {
     if (number && projectNumber) projectNumber.textContent = `[${number}]`;
   }
 
-  function clearActiveCard() {
-    cards.forEach((c) => c.classList.remove("active"));
-    carousel.classList.remove("has-active");
-    activeCard = null;
-  }
-
-  // Handle mouseenter
-  cards.forEach((card, index) => {
-    card.addEventListener("mouseenter", () => {
+ carousel.addEventListener('mouseover', (e) => {
+    const card = e.target.closest('.project-card');
+    if (card) {
+      const index = parseInt(card.dataset.index || '0');
       setActiveCard(card, index);
-    });
+    }
   });
 
-  // Handle click
-  cards.forEach((card, index) => {
-    card.addEventListener("click", () => {
+  carousel.addEventListener('mouseout', (e) => {
+    // Only clear if we're leaving the carousel entirely
+    if (!e.relatedTarget || !carousel.contains(e.relatedTarget)) {
+      clearActiveCard();
+    }
+  });
+
+  carousel.addEventListener('click', (e) => {
+    const card = e.target.closest('.project-card');
+    if (card) {
+      const index = parseInt(card.dataset.index || '0');
       setActiveCard(card, index);
-    });
+    }
   });
 
   // Handle mouseleave from carousel (not individual cards)
@@ -366,70 +369,69 @@ window.addEventListener('popstate', updateActiveNavLink);
 // ============================================
 // INITIALIZE ALL - OPTIMIZED
 // ============================================
+// ============================================
+// COMPLETE INITIALIZATION
+// ============================================
 function init() {
-  console.log("Initializing portfolio...");
+  console.log("🎨 Initializing portfolio...");
 
-  // Wait for Jaspr to hydrate
-  setTimeout(() => {
-    // Initialize text scramble with debounce
-    const scrambleElements = document.querySelectorAll(".scramble-text");
-    const scramblers = new Map();
-    let scrambleTimeout;
+  const scrambleElements = document.querySelectorAll(".scramble-text");
+  console.log(`📝 Found ${scrambleElements.length} scramble elements`);
+  
+  const scramblers = new Map();
+  let scrambleTimeout;
 
-    scrambleElements.forEach((el) => {
-      const fx = new TextScramble(el);
-      scramblers.set(el, fx);
+  scrambleElements.forEach((el) => {
+    const fx = new TextScramble(el);
+    scramblers.set(el, fx);
 
-      // Initial scramble
-      const originalText = el.getAttribute("data-text") || el.innerText;
-      setTimeout(() => {
-        fx.setText(originalText);
-      }, Math.random() * 500);
+    const originalText = el.getAttribute("data-text") || el.innerText;
+    setTimeout(() => {
+      fx.setText(originalText);
+    }, Math.random() * 500);
 
-      // Hover scramble with debounce
-      el.addEventListener("mouseenter", () => {
-        clearTimeout(scrambleTimeout);
-        scrambleTimeout = setTimeout(() => {
-          const text = el.getAttribute("data-text") || el.innerText;
-          fx.setText(text);
-        }, 50);
-      });
+    el.addEventListener("mouseenter", () => {
+      clearTimeout(scrambleTimeout);
+      scrambleTimeout = setTimeout(() => {
+        const text = el.getAttribute("data-text") || el.innerText;
+        fx.setText(text);
+      }, 50);
     });
+  });
 
-    // Initialize all features
-    initCursor();
-    initMagneticButtons();
-    initProjectCarousel();
-    initTimeClock();
-    initPageTransitions();
-    initScrollAnimations();
-    initIntersectionAnimations();
+  initCursor();
+  initMagneticButtons();
+  initProjectCarousel();
+  initTimeClock();
+  initPageTransitions();
+  initScrollAnimations();
+  initIntersectionAnimations();
 
-    console.log("Portfolio initialized!");
-  }, 200); // Wait 200ms for Jaspr
+  console.log("✅ Portfolio initialized!");
 }
 
-// Run when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
-}
-
-// Toggle cursor with 'C' key
-let cursorEnabled = true;
-document.addEventListener("keydown", (e) => {
-  if (e.key === "c" || e.key === "C") {
-    cursorEnabled = !cursorEnabled;
-    const cursor = document.querySelector(".cursor");
-    const follower = document.querySelector(".cursor-follower");
-
-    if (cursor && follower) {
-      cursor.style.display = cursorEnabled ? "block" : "none";
-      follower.style.display = cursorEnabled ? "block" : "none";
-      document.body.style.cursor = cursorEnabled ? "none" : "auto";
+// Wait for Jaspr hydration
+function waitForJaspr() {
+  let attempts = 0;
+  const checkHydration = setInterval(() => {
+    attempts++;
+    const carousel = document.querySelector('#projects-carousel');
+    const cards = document.querySelectorAll('.project-card');
+    
+    if (carousel && cards.length > 0) {
+      clearInterval(checkHydration);
+      console.log(`✅ Jaspr ready after ${attempts} attempts`);
+      init();
+    } else if (attempts > 50) {
+      clearInterval(checkHydration);
+      console.log('⚠️ Timeout, initializing anyway');
+      init();
     }
-  }
-});
+  }, 100);
+}
 
-
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', waitForJaspr);
+} else {
+  waitForJaspr();
+}

@@ -180,15 +180,79 @@ class _ContactPageState extends State<ContactPage> {
                 type: ButtonType.button,
                 classes: 'contact-submit magnetic ${sending ? 'pulse' : ''}',
                 attributes: {'data-strength': '20'},
-                events: {'click': (event) => _handleSubmit()},
-                // onClick: () => _handleSubmit(),
+                // events: {'click': (event) => _handleSubmit()},
+                onClick: () => _handleSubmit(),
                 disabled: sending,
                 [Component.text(sending ? 'SENDING...' : 'SEND MESSAGE →')],
               ),
             ]),
         ]),
       ]),
-      Footer()
+      Footer(),
+       RawText('''
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Wait for button to exist
+          const checkButton = setInterval(() => {
+            const submitBtn = document.querySelector('.contact-submit');
+            if (submitBtn) {
+              clearInterval(checkButton);
+              console.log('✅ Contact button found');
+              
+              submitBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                console.log('📧 Button clicked!');
+                
+                // Get form values
+                const name = document.querySelector('input[type="text"]').value;
+                const email = document.querySelector('input[type="email"]').value;
+                const subject = document.querySelectorAll('input[type="text"]')[1]?.value || '';
+                const message = document.querySelector('textarea').value;
+                
+                if (!name || !email || !message) {
+                  alert('Please fill in all required fields');
+                  return;
+                }
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'SENDING...';
+                
+                try {
+                  const response = await fetch('http://localhost:8080/contact/send', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, subject, message })
+                  });
+                  
+                  const result = await response.json();
+                  
+                  if (result.success) {
+                    alert('Message sent successfully!');
+                    // Clear form
+                    document.querySelector('input[type="text"]').value = '';
+                    document.querySelector('input[type="email"]').value = '';
+                    document.querySelectorAll('input[type="text"]')[1].value = '';
+                    document.querySelector('textarea').value = '';
+                  } else {
+                    alert('Failed to send message. Please try again.');
+                  }
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Error sending message. Please try again.');
+                } finally {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'SEND MESSAGE →';
+                }
+              });
+            }
+          }, 100);
+        });
+      </script>
+    '''),
     ]);
 
     

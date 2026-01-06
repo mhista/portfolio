@@ -1,9 +1,9 @@
 import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_router/jaspr_router.dart';
-import 'package:port/components/shimmer_image.dart';
 import '../services/project_service.dart';
 import '../models/project.dart';
+
 @client
 class HomePage extends StatefulComponent {
   @override
@@ -21,8 +21,8 @@ class _HomePageState extends State<HomePage> {
     _loadProjects();
   }
 
-  void _loadProjects()  {
-    projects =  ProjectService.getMockProjects();
+  void _loadProjects() {
+    projects = ProjectService.getMockProjects();
   }
 
   @override
@@ -138,10 +138,13 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 events: {
                                   'click': (event) => setState(() => currentIndex = i),
-                                  'mouseover': (event) => setState(() => currentIndex = i),
+                                  // 'mouseover': (event) => setState(() => currentIndex = i),
+                                  'mouseenter': (event) => setState(() {
+                                    currentIndex = i;
+                                  }),
                                 },
                                 [
-                                  ShimmerImage(
+                                  img(
                                     src: projects[i].imageUrl,
                                     alt: projects[i].title,
                                     classes: 'w-[232px] h-[146.267px] object-cover rounded-lg',

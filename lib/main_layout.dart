@@ -22,9 +22,7 @@ class MainLayout extends StatelessComponent {
         script(
           src: 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4',
         ),
-        script(
-          src: '/interaction.js',
-        ),
+
         script(
           src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js',
         ),
@@ -37,6 +35,9 @@ class MainLayout extends StatelessComponent {
         PageTransition(),
         Navigation(),
         child,
+        script(
+          src: '/interaction.js',
+        ),
         // script(src: '/main.dart.js', ),
       ]),
     );
