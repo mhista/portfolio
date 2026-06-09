@@ -36,7 +36,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       [
         h2(
           classes: 'scramble-text text-5xl mb-16 uppercase tracking-tight',
-          [Component.text('FEATURED WORK')],
+          [Component.text('PROJECTS SPOTLIGHT')],
         ),
         
         if (loading)

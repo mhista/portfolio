@@ -8,7 +8,7 @@ class Project {
   final int order;
   final bool featured;
   final List<String> technologies;
-  final String? projectUrl;
+  final List<Map<String,String>>? projectUrl;
   final String? githubUrl;
   final List<String>? images;
   final List<String>? results;
@@ -42,7 +42,7 @@ class Project {
       order: json['order'] as int,
       featured: json['featured'] as bool? ?? false,
       technologies: (json['technologies'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
-      projectUrl: json['projectUrl'] as String?,
+      projectUrl: (json['projectUrl'] as List<dynamic>?)?.map((e) => e as Map<String, String>).toList() ?? [],
       githubUrl: json['githubUrl'] as String?,
       images: (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
       results: (json['results'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],

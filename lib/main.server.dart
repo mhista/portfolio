@@ -15,44 +15,16 @@ import 'app.dart';
 // This file is generated automatically by Jaspr, do not remove or edit.
 import 'main.server.options.dart';
 
-void main() async{
+void main() async {
   // Initializes the server environment with the generated default options.
   Jaspr.initializeApp(
     options: defaultServerOptions,
   );
 
+  // Starts the app.
+  runApp(App());
+
+  // Also start the email server if needed for endpoints
   final server = EmailServer();
   await server.start();
-
-  // Starts the app.
-  //
-  // [Document] renders the root document structure (<html>, <head> and <body>)
-  // with the provided parameters and components.
-  // runApp(Document(
-  //   title: 'port',
-  //   base: '/',
-  //   head: [
-  //       meta(charset: 'utf-8'),
-  //       meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0'),
-  //       link(rel: 'stylesheet', href: '/main.css'),
-
-  //       // link(rel: 'stylesheet', href: '/styles.tw.css'),
-
-       
-  //       script(
-  //         src: 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4',
-  //       ),
-  //       script(
-  //         src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js',
-  //       ),
-  //       script(
-  //         src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js',
-  //       ),
-  //        script(
-  //         src: '/interaction.js',
-  //       ),
-  //   ],
-   
-  //   body: App(),
-  // ));
 }

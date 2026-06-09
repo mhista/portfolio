@@ -28,30 +28,30 @@ class App extends StatelessComponent {
       routes: [
         // Public Routes
         Route(
-          path: '/app',
+          path: '/',
           builder: (context, state) => MainLayout(child: HomePage()),
         ),
         Route(
-          path: '/app/archive',
+          path: '/archive',
           builder: (context, state) => MainLayout(child: ArchivePage()),
         ),
         Route(
-          path: '/app/info',
+          path: '/info',
           builder: (context, state) => MainLayout(child: InfoPage()),
         ),
         Route(
-          path: '/app/contact',
+          path: '/contact',
           builder: (context, state) => MainLayout(child: ContactPage()),
         ),
         Route(
-          path: '/app/projects/:id',
+          path: '/projects/:id',
           builder: (context, state) {
             final id = state.params['id']!;
             return MainLayout(child: ProjectDetailPage(projectId: id));
           },
         ),
         Route(
-          path: '/app/blog',
+          path: '/blog',
           builder: (context, state) => MainLayout(child: BlogPage()),
         ),
         // Route(

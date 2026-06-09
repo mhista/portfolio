@@ -6,6 +6,7 @@ class ShimmerImage extends StatefulComponent {
   final String src;
   final String alt;
   final String classes;
+  
 
   const ShimmerImage({
     required this.src,

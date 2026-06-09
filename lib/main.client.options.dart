@@ -22,7 +22,6 @@ import 'package:port/pages/archive_page.dart' deferred as _archive_page;
 import 'package:port/pages/blog_page.dart' deferred as _blog_page;
 import 'package:port/pages/blog_post_page.dart' deferred as _blog_post_page;
 import 'package:port/pages/contact_page.dart' deferred as _contact_page;
-import 'package:port/pages/home_page.dart' deferred as _home_page;
 import 'package:port/pages/info_page.dart' deferred as _info_page;
 import 'package:port/pages/project_detail_page.dart'
     deferred as _project_detail_page;
@@ -96,10 +95,6 @@ ClientOptions get defaultClientOptions => ClientOptions(
     'contact_page': ClientLoader(
       (p) => _contact_page.ContactPage(),
       loader: _contact_page.loadLibrary,
-    ),
-    'home_page': ClientLoader(
-      (p) => _home_page.HomePage(),
-      loader: _home_page.loadLibrary,
     ),
     'info_page': ClientLoader(
       (p) => _info_page.InfoPage(),

@@ -32,3 +32,12 @@ migrate_working_dir/
 # Flutter related
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Environment variables
+.env
+*.env
+*.env.local
+*.env.*.local
+
+# Generated files
+*.g.dart

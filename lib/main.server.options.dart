@@ -17,7 +17,6 @@ import 'package:port/pages/archive_page.dart' as _archive_page;
 import 'package:port/pages/blog_page.dart' as _blog_page;
 import 'package:port/pages/blog_post_page.dart' as _blog_post_page;
 import 'package:port/pages/contact_page.dart' as _contact_page;
-import 'package:port/pages/home_page.dart' as _home_page;
 import 'package:port/pages/info_page.dart' as _info_page;
 import 'package:port/pages/project_detail_page.dart' as _project_detail_page;
 
@@ -70,7 +69,6 @@ ServerOptions get defaultServerOptions => ServerOptions(
     _contact_page.ContactPage: ClientTarget<_contact_page.ContactPage>(
       'contact_page',
     ),
-    _home_page.HomePage: ClientTarget<_home_page.HomePage>('home_page'),
     _info_page.InfoPage: ClientTarget<_info_page.InfoPage>('info_page'),
     _project_detail_page.ProjectDetailPage:
         ClientTarget<_project_detail_page.ProjectDetailPage>(
@@ -78,6 +76,7 @@ ServerOptions get defaultServerOptions => ServerOptions(
           params: __project_detail_pageProjectDetailPage,
         ),
   },
+  styles: () => [],
 );
 
 Map<String, Object?> __shimmer_imageShimmerImage(

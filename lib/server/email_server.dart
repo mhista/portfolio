@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:jaspr/server.dart' hide Request, Response, Handler;
+// import 'package:port/env.dart';
 import 'package:port/main_layout.dart';
 import 'package:port/pages/contact_page.dart';
 import 'package:port/pages/home_page.dart';
@@ -12,13 +13,11 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
 class EmailServer {
-  static final String smtpHost = Platform.environment['SMTP_HOST'] ?? 'smtp.gmail.com';
-  static final int smtpPort = Platform.environment['SMTP_PORT'] != null 
-      ? int.parse(Platform.environment['SMTP_PORT']!) 
-      : 587;
-  static final String smtpUser = Platform.environment['SMTP_USER'] ?? 'your-email@gmail.com';
-  static final String smtpPassword = Platform.environment['SMTP_PASSWORD'] ?? 'your-app-password';
-  static final String receiverEmail = Platform.environment['RECEIVER_EMAIL'] ?? 'your-email@gmail.com';
+  static final String smtpHost = 'smtp.gmail.com';
+  static final int smtpPort = 587;
+  static final String smtpUser = 'kymaatech@gmail.com';
+  static final String smtpPassword = 'kmjr exbq abox jbta';
+  static final String receiverEmail = 'diweesomchi@gmail.com';
 
   Future<void> start() async {
     final app = RelicApp();
@@ -198,6 +197,7 @@ class EmailServer {
   }) async {
     try {
       final smtpServer = gmail(smtpUser, smtpPassword);
+      print('📧 Sending email to $smtpUser');
 
       final emailMessage = Message()
         ..from = Address(smtpUser, 'Portfolio Contact Form')

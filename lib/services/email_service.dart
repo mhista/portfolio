@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
+// import 'package:port/env.dart';
 
 class EmailService {
   // Use localhost for development, your domain for production
-  static final String baseUrl = Platform.environment['BASE_URL'] ?? 'http://localhost:8080';
+  static final String baseUrl = 'https://innocentdiwe.qzz.io' ?? 'http://localhost:8080';
   // For production: static const String baseUrl = 'https://api.yourdomain.com';
 
   static Future<bool> sendContactEmail({
@@ -29,7 +29,7 @@ class EmailService {
         }),
       );
 
-      print('📧 Response status: ${response.statusCode}');
+      print('📧 Response status: ${response.statusCode}');  
       print('📧 Response body: ${response.body}');
 
       if (response.statusCode == 200) {

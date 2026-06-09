@@ -59,16 +59,20 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
       ]);
     }
 
-    return div(classes: 'min-h-screen bg-black text-white', [
+    return div(classes: 'min-h-screen bg-black text-white project-detail-hero', [
       // Hero section with split layout
       div(classes: 'container mx-auto px-6 md:px-12 py-20', [
         div(classes: 'grid md:grid-cols-2 gap-16 items-start', [
           // Left side - Project info
-          div(classes: 'space-y-12', [
+          div(classes: 'project-detail-info space-y-12', [
             // Title
-            h1(classes: 'text-[clamp(2.5rem,8vw,6rem)] font-bold leading-none tracking-tight mb2', [
-              Component.text(project!.title),
-            ]),
+            h1(
+              classes: 'scramble-text text-[clamp(2.5rem,8vw,6rem)] font-bold leading-none tracking-tight mb2',
+              attributes: {'data-text': project!.title},
+              [
+                Component.text(project!.title),
+              ],
+            ),
 
             // Metadata grid
             div(classes: 'grid grid-cols-2 gap-8 text-sm', [
@@ -89,14 +93,16 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
               div([
                 div(classes: 'text-gray-500 mb-2 tracking-wider', [Component.text('LIVE SITE')]),
                 if (project!.projectUrl != null)
-                  a(
-                    href: project!.projectUrl!,
-                    classes: 'text-white hover:text-gray-400 transition-colors inline-flex items-center gap-2',
-                    [
-                      Component.text(project!.title.toUpperCase()),
-                      span([Component.text('↗')]),
-                    ],
-                  )
+                  for (var url in project!.projectUrl!)
+                    a(
+                      href: url['url'] ?? '',
+                      target: Target.blank,
+                      classes: 'text-white hover:text-gray-400 transition-colors inline-flex items-center gap-2',
+                      [
+                        Component.text(url['name']?.toUpperCase() ?? 'VIEW SITE'),
+                        span([Component.text('↗')]),
+                      ],
+                    )!
                 else
                   div(classes: 'text-white', [Component.text('—')]),
               ]),
@@ -139,8 +145,8 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
           ]),
 
           // Right side - Hero image
-          div(classes: 'relative', [
-            div(classes: 'aspect-[4/3] bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden', [
+          div(classes: 'project-detail-image relative', [
+            div(classes: 'bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden', [
               img(
                 src: project!.imageUrl,
                 alt: project!.title,
@@ -218,6 +224,41 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
 
       // Footer
       Footer(),
+      RawText('<script>if (window.initPortfolio) window.initPortfolio();</script>'),
     ]);
+  }
+
+  String _buildGalleryHtml() {
+    if (project == null || project!.images == null || project!.images!.isEmpty) return '';
+
+    final buffer = StringBuffer();
+
+    // Main Carousel
+    buffer.write('''
+      <div class="project-gallery-main relative aspect-[16/9] bg-gray-900 rounded-lg overflow-hidden">
+        <img src="${project!.images![0]}" alt="Project image" class="w-full h-full object-fit transition-opacity duration-500">
+        
+        <button class="gallery-prev absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full flex items-center justify-center text-white transition-all cursor-pointer">←</button>
+        <button class="gallery-next absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black bg-opacity-50 hover:bg-opacity-80 rounded-full flex items-center justify-center text-white transition-all cursor-pointer">→</button>
+        
+        <div class="gallery-counter absolute bottom-4 left-1/2 -translate-x-1/2 text-sm font-mono bg-black bg-opacity-50 px-4 py-2 rounded-full">
+          1 / ${project!.images!.length}
+        </div>
+      </div>
+    ''');
+
+    // Thumbnails
+    buffer.write('<div class="grid grid-cols-3 gap-4 mt-6">');
+    for (var i = 0; i < project!.images!.length; i++) {
+      final activeClass = i == 0 ? 'active ring-2 ring-white' : 'opacity-50 hover:opacity-100';
+      buffer.write('''
+        <div class="gallery-thumb aspect-video rounded overflow-hidden $activeClass transition-all cursor-pointer" data-src="${project!.images![i]}" data-index="$i">
+          <img src="${project!.images![i]}" alt="Thumbnail" class="w-full h-full object-fit">
+        </div>
+      ''');
+    }
+    buffer.write('</div>');
+
+    return buffer.toString();
   }
 }

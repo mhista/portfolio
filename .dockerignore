@@ -1,0 +1,8 @@
+.dart_tool/
+.git/
+build/
+.env
+*.log
+.vscode/
+.idea/
+.DS_Store

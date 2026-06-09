@@ -1272,11 +1272,11 @@ body::before {
 /* ============================================ */
 .contact-page {
   min-height: 100vh;
-  padding: 12rem 4rem 4rem;
+  /* padding: 12rem 4rem 4rem; */
 }
 
 .contact-container {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1752,7 +1752,7 @@ footer {
   }
 
   .project-card {
-    min-width: 85vw;
+    /* min-width: 85vw; */
     scroll-snap-align: center;
   }
 

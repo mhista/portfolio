@@ -17,28 +17,16 @@ class MainLayout extends StatelessComponent {
         meta(charset: 'utf-8'),
         meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0'),
         link(rel: 'stylesheet', href: '/main.css'),
-
-        // link(rel: 'stylesheet', href: '/styles.css'),
-        script(
-          src: 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4',
-        ),
-
-        script(
-          src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js',
-        ),
-        script(
-          src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js',
-        ),
+        script(src: 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4'),
+        script(src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'),
+        script(src: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js'),
       ],
       body: div([
         CustomCursor(),
         PageTransition(),
         Navigation(),
         child,
-        script(
-          src: '/interaction.js',
-        ),
-        // script(src: '/main.dart.js', ),
+        script(src: '/interaction.js'),
       ]),
     );
   }

@@ -23,10 +23,10 @@ class InfoPage extends StatelessComponent {
             // Bio paragraphs
             div(classes: 'space-y-8 text-sm md:text-2xl leading-relaxed', [
               p(classes: 'fade-in', [
-                Component.text('I\'m Rylan Phillips, an independent designer & developer shaping brands that stand out and drive meaningful growth.'),
+                Component.text('I’m a software developer specializing in Flutter, Jaspr and Dart, focused on building scalable, user-centric mobile and web applications. I work across the stack—handling frontend, backend integrations, real-time features, and AI-powered solutions—to deliver products that solve real-world problems.'),
               ]),
               p(classes: 'fade-in', [
-                Component.text('Originally from Los Angeles and now based in Vienna, I\'m passionate about bringing ambitious visions to life and partnering with founders and brands who refuse to settle for average.'),
+                Component.text('I’ve built applications in health-tech, fintech, e-commerce, and sustainability, with experience in video/voice calling, chat systems, real-time data, and cloud-backed architectures. I’m passionate about creating impactful products, learning continuously, and turning ideas into reliable, production-ready software.'),
               ]),
             ]),
             
