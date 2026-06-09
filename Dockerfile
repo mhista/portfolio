@@ -1,45 +1,30 @@
-# Stage 1: Build
-FROM dart:stable AS build
+# Use the official dart docker image as our build image.
+FROM dart:stable as build
 
-WORKDIR /app
-
-# Copy pubspec and get dependencies
-COPY pubspec.* ./
-RUN dart pub get
-
-# Copy the rest of the code
-COPY . .
-
-# Install jaspr_cli
+# Activate the jaspr cli.
 RUN dart pub global activate jaspr_cli
 
-# Build the project
-# This will generate the build/jaspr directory
-RUN dart pub global run jaspr build --verbose
-
-# Stage 2: Runtime
-FROM debian:bookworm-slim
-
-# Install CA certificates for email sending
-RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
+# Copy all files into the current image.
+COPY . .
+
+# Resolve app dependencies.
+RUN rm -f pubspec_overrides.yaml
+RUN dart pub get
+
+# Build project
+RUN dart pub global run jaspr_cli:jaspr build --verbose
+
+# Use a new empty docker image, this will be the final container image.
+FROM scratch
 
 # Copy all the needed runtime libraries for dart.
 COPY --from=build /runtime/ /
-
-# Copy the build output
-# jaspr build produces a 'build/jaspr' directory
-# Inside there is usually a folder named 'app' or similar containing the executable and assets
-# We copy everything to /app
+# Copy the build outputs for your site.
 COPY --from=build /app/build/jaspr/ /app/
 
-# Expose the port defined in EmailServer
-EXPOSE 8080
+WORKDIR /app
 
-# Start the server
-# The executable is usually named after the project or 'app'
-# Since the project name is 'port', it might be 'port' or 'app'
-# Jaspr build creates an executable. Let's assume it's named 'app' or we can check the build output.
-# Usually it's 'app' in the root of build/jaspr
+# Start the server.
+EXPOSE 8080
 CMD ["./app"]
