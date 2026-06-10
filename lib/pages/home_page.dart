@@ -38,11 +38,11 @@ class _HomePageState extends State<HomePage> {
     final currentProject = projects[currentIndex];
 
     return section(
-      classes: 'h-screen overflow-hidden flex flex-col',
+      classes: 'h-screen overflow-hidden flex flex-col home-page-root',
       [
         // Main content area
         div(
-          classes: 'flex-1 flex flex-col justify-between px-4 sm:px-8 pb-6 min-h-0 mt-20 sm:mt-24',
+          classes: 'flex-1 flex flex-col justify-between px-4 sm:px-8 pb-6 min-h-0 mt-16 sm:mt-24',
           [
             // Top: Project title and meta
             div(

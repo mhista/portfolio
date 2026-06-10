@@ -1272,11 +1272,16 @@ body::before {
 /* ============================================ */
 .contact-page {
   min-height: 100vh;
-  /* padding: 12rem 4rem 4rem; */
+}
+
+@media (max-width: 768px) {
+  .contact-page {
+    padding-top: 6rem !important;
+    padding-bottom: 2rem !important;
+  }
 }
 
 .contact-container {
-  /* max-width: 1200px; */
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1296,6 +1301,13 @@ body::before {
   margin-bottom: 4rem;
 }
 
+@media (max-width: 768px) {
+  .contact-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+}
+
 .contact-details {
   display: flex;
   flex-direction: column;
@@ -1310,6 +1322,16 @@ body::before {
   border-radius: 8px;
   border: 1px solid #222;
   transition: all 0.3s;
+}
+
+@media (max-width: 640px) {
+  .contact-detail-item {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .contact-icon {
+    font-size: 1.5rem !important;
+  }
 }
 
 .contact-icon {
@@ -1361,6 +1383,15 @@ body::before {
   border: 1px solid #222;
 }
 
+@media (max-width: 640px) {
+  .contact-form {
+    padding: 1.5rem;
+  }
+  .contact-container {
+    gap: 2rem;
+  }
+}
+
 .contact-submit {
   width: 100%;
   padding: 1.5rem;
@@ -1376,6 +1407,17 @@ body::before {
   transition: all 0.3s;
   font-family: inherit;
 }
+
+/* Home Page specific to prevent scrolling */
+.home-page-root {
+  height: 100dvh; /* Use dynamic viewport height */
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
 
 .contact-submit:hover {
   background: #00cc35;

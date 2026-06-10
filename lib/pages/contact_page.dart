@@ -60,7 +60,7 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   Component build(BuildContext context) {
-    return section(classes: 'contact-page max-w-7xl px-[2rem] pt-[8rem] md:px-[4rem] md:pt-[12rem]', [
+    return section(classes: 'contact-page max-w-7xl mx-auto px-4 sm:px-8 pt-20 md:pt-32', [
       div(classes: 'contact-container', [
         div(classes: 'contact-info slide-in-left', [
           h1(
