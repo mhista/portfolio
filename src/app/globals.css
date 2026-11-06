@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --void: #0a0a0a;
+  --bone: #f2f2ee;
+  --ash: #8c8c86;
+  --signal: #00ff41;
+  --cut: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html {
+  background: var(--void);
+  color: var(--bone);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  @apply font-mono;
+  min-height: 100svh;
+  overflow-x: hidden;
+}
+
+/* The spira line art from the original site, kept faint behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("/images/spira.webp") center / cover no-repeat;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: -1;
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Custom cursor only for real mice; touch and keyboard users keep the native one */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor a,
+  html.has-cursor button {
+    cursor: none;
+  }
+  html.has-cursor input,
+  html.has-cursor textarea {
+    cursor: text;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@layer components {
+  .display {
+    @apply font-sans font-extrabold uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.86;
+  }
+}
+
+.link-u {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.35s var(--cut), color 0.2s;
+}
+.link-u:hover,
+.link-u:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
