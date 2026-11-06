@@ -61,7 +61,7 @@ export function ArchiveList({ projects }: { projects: Project[] }) {
                 className="group grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-1 py-5 sm:grid-cols-[3.5rem_1fr_14rem_6.5rem] sm:gap-x-6 sm:py-6"
               >
                 <span className="h-12 w-16 overflow-hidden rounded sm:hidden">
-                  {p.cover ? <ProjectImage src={p.cover} alt="" sizes="64px" /> : <Cover project={p} size="sm" />}
+                  {p.cover ? <ProjectImage src={p.cover} alt="" sizes="64px" /> : <Cover project={p} size="xs" />}
                 </span>
                 <span className="hidden text-[12px] text-ash sm:block">{p.year}</span>
                 <span className="display min-w-0 text-[clamp(1.6rem,4.2vw,3.6rem)] transition-[color,transform] duration-300 ease-cut group-hover:translate-x-2 group-hover:text-signal">

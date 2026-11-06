@@ -4,6 +4,10 @@ export default {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      screens: {
+        /* Tablet-or-wider AND tall enough for the fixed, one-screen home layout */
+        tall: { raw: "(min-width: 768px) and (min-height: 700px)" },
+      },
       colors: {
         void: "#0a0a0a",
         coal: "#141414",

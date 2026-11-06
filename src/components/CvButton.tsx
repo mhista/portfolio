@@ -1,13 +1,13 @@
 import { SITE } from "@/lib/site";
 import { Magnetic } from "./Magnetic";
 
-export function CvButton({ className = "" }: { className?: string }) {
+export function CvButton({ className = "", block = false }: { className?: string; block?: boolean }) {
   return (
-    <Magnetic>
+    <Magnetic className={block ? "!block w-full" : ""}>
       <a
         href={SITE.cv}
         download="Diwe-Innocent-Esomchi-CV.pdf"
-        className={`group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-bone/30 px-5 py-3 text-[12px] text-bone transition-colors duration-300 hover:border-signal hover:text-void ${className}`}
+        className={`group relative inline-flex min-h-11 items-center gap-3 overflow-hidden rounded-full border border-bone/30 px-5 py-3 text-[12px] text-bone transition-colors duration-300 hover:border-signal hover:text-void ${className}`}
       >
         <span className="absolute inset-0 -z-0 translate-y-full bg-signal transition-transform duration-300 ease-cut group-hover:translate-y-0" />
         <svg aria-hidden viewBox="0 0 16 16" className="relative h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
